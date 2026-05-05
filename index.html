@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="night">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Blackjack Ultimate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Josefin+Sans:wght@100;300;400;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<canvas id="particle-canvas"></canvas>
+<div class="felt-overlay"></div>
+
+<div class="casino">
+
+  <!-- ── TOPBAR ── -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="table-level-badge" id="table-badge">🥉 BRONZE</div>
+      <button class="icon-btn" onclick="openTableSelect()" title="Changer de table">⬆ TABLE</button>
+    </div>
+    <div class="casino-title-wrap">
+      <div class="ornament">✦</div>
+      <h1 class="casino-title">BLACKJACK</h1>
+      <div class="ornament">✦</div>
+    </div>
+    <div class="topbar-right">
+      <button class="icon-btn" onclick="toggleTheme()" id="theme-btn">☀ JOUR</button>
+      <button class="icon-btn" onclick="openStats()" title="Statistiques">📊 STATS</button>
+    </div>
+  </div>
+
+  <!-- ── JACKPOT BANNER ── -->
+  <div class="jackpot-banner">
+    <span class="jackpot-label">JACKPOT PROGRESSIF</span>
+    <span class="jackpot-value" id="jackpot-val">0 €</span>
+    <button class="jackpot-btn" id="jackpot-btn" onclick="toggleJackpotBet()">MISER 5€</button>
+  </div>
+
+  <!-- ── BANK ROW ── -->
+  <div class="bank-row">
+    <div class="bank-item">
+      <span class="bank-label">SOLDE</span>
+      <span class="bank-value" id="balance">5 000 €</span>
+    </div>
+    <div class="bank-sep">|</div>
+    <div class="bank-item">
+      <span class="bank-label">MISE</span>
+      <span class="bank-value" id="current-bet">0 €</span>
+    </div>
+    <div class="bank-sep">|</div>
+    <div class="bank-item">
+      <span class="bank-label">NET</span>
+      <span class="bank-value" id="total-won">+0 €</span>
+    </div>
+    <div class="bank-sep">|</div>
+    <div class="bank-item">
+      <span class="bank-label">SABOT</span>
+      <span class="bank-value hilo" id="hilo-indicator">◆</span>
+    </div>
+  </div>
+
+  <!-- ── MAIN TABLE ── -->
+  <div class="table" id="main-table">
+
+    <!-- Dealer -->
+    <div class="dealer-zone">
+      <div class="zone-label">— CROUPIER —</div>
+      <div class="dealer-think" id="dealer-think">💭</div>
+      <div class="score-display" id="dealer-score"></div>
+      <div class="hand" id="dealer-hand"></div>
+    </div>
+
+    <!-- Insurance / Surrender / Jackpot alerts -->
+    <div class="special-actions" id="special-actions" style="display:none">
+      <button class="special-btn insurance" id="btn-insurance" onclick="takeInsurance()" style="display:none">
+        🛡 ASSURANCE (½ mise)
+      </button>
+      <button class="special-btn decline" onclick="declineInsurance()" id="btn-decline-ins" style="display:none">
+        Refuser
+      </button>
+    </div>
+
+    <!-- Result banner -->
+    <div class="result-banner" id="result-banner"></div>
+
+    <!-- Player hands -->
+    <div class="player-zones-wrap" id="player-zones-wrap">
+      <div class="player-zone" id="zone-0">
+        <div class="zone-label">MAIN 1 <span class="active-dot" id="dot-0">◆</span></div>
+        <div class="score-display" id="score-0"></div>
+        <div class="hand" id="hand-0"></div>
+        <div class="zone-bet" id="zbet-0"></div>
+      </div>
+    </div>
+
+    <!-- Strategy helper -->
+    <div class="strategy-hint" id="strategy-hint" style="display:none">
+      <span id="strategy-text"></span>
+    </div>
+
+  </div><!-- .table -->
+
+  <!-- ── BANKROLL CHART ── -->
+  <div class="bankroll-chart-wrap" id="bankroll-chart-wrap">
+    <canvas id="bankroll-chart"></canvas>
+  </div>
+
+  <!-- ── BETTING PANEL ── -->
+  <div class="betting-panel" id="betting-panel">
+    <div class="betting-header">
+      <div class="betting-title">PLACER SA MISE</div>
+      <div class="multi-hands-row">
+        <span class="bank-label">MAINS</span>
+        <div class="multi-toggle">
+          <button class="multi-btn active" data-h="1" onclick="setMultiHands(1)">1</button>
+          <button class="multi-btn" data-h="2" onclick="setMultiHands(2)">2</button>
+          <button class="multi-btn" data-h="3" onclick="setMultiHands(3)">3</button>
+        </div>
+      </div>
+    </div>
+    <div class="chips-row">
+      <button class="chip" data-val="5"   onclick="addBet(5)"  ><span>5</span></button>
+      <button class="chip" data-val="10"  onclick="addBet(10)" ><span>10</span></button>
+      <button class="chip" data-val="25"  onclick="addBet(25)" ><span>25</span></button>
+      <button class="chip" data-val="50"  onclick="addBet(50)" ><span>50</span></button>
+      <button class="chip" data-val="100" onclick="addBet(100)"><span>100</span></button>
+      <button class="chip" data-val="500" onclick="addBet(500)"><span>500</span></button>
+    </div>
+    <div class="bet-actions">
+      <button class="bet-btn" onclick="clearBet()">Annuler</button>
+      <button class="bet-btn" onclick="repeatBet()" id="repeat-btn" style="display:none">↺ Rejouer</button>
+      <button class="bet-btn primary" onclick="dealCards()" id="deal-btn" disabled>Distribuer</button>
+    </div>
+    <!-- Objectives -->
+    <div class="objectives-row" id="objectives-row"></div>
+  </div>
+
+  <!-- ── ACTION PANEL ── -->
+  <div class="action-panel" id="action-panel" style="display:none">
+    <button class="action-btn" id="btn-hit"       onclick="hit()">TIRER</button>
+    <button class="action-btn" id="btn-stand"     onclick="stand()">RESTER</button>
+    <button class="action-btn" id="btn-double"    onclick="doubleDown()">DOUBLER</button>
+    <button class="action-btn" id="btn-split"     onclick="splitHand()" style="display:none">SÉPARER</button>
+    <button class="action-btn surrender-btn" id="btn-surrender" onclick="surrender()" style="display:none">ABANDONNER</button>
+  </div>
+
+  <!-- ── STRATEGY TOGGLE ── -->
+  <div class="strategy-toggle-row">
+    <label class="toggle-label">
+      <input type="checkbox" id="strategy-toggle" onchange="toggleStrategy()"/>
+      <span class="toggle-track"></span>
+      <span>Aide stratégie</span>
+    </label>
+    <label class="toggle-label">
+      <input type="checkbox" id="hilo-toggle" onchange="toggleHiLo()"/>
+      <span class="toggle-track"></span>
+      <span>Comptage Hi-Lo</span>
+    </label>
+  </div>
+
+  <!-- ── HISTORY ── -->
+  <div class="history-strip" id="history-strip"></div>
+  <div class="streak-display" id="streak-display"></div>
+
+  <!-- ── RULES ── -->
+  <div class="rules-row">
+    <span>BJ paie 3:2</span><span class="dot-sep">·</span>
+    <span>Croupier tire à 16, reste à 17</span><span class="dot-sep">·</span>
+    <span>Insurance, Surrender, Split, Double disponibles</span>
+  </div>
+
+</div><!-- .casino -->
+
+<!-- ── TABLE SELECT MODAL ── -->
+<div class="modal-overlay" id="table-modal">
+  <div class="modal">
+    <div class="modal-title">CHOISIR UNE TABLE</div>
+    <div class="table-cards">
+      <div class="table-card" data-t="bronze" onclick="selectTable('bronze')">
+        <div class="table-card-icon">🥉</div>
+        <div class="table-card-name">BRONZE</div>
+        <div class="table-card-desc">Mise min. 5€ · Max 100€</div>
+      </div>
+      <div class="table-card" data-t="silver" onclick="selectTable('silver')">
+        <div class="table-card-icon">🥈</div>
+        <div class="table-card-name">SILVER</div>
+        <div class="table-card-desc">Mise min. 25€ · Max 500€</div>
+      </div>
+      <div class="table-card active" data-t="gold" onclick="selectTable('gold')">
+        <div class="table-card-icon">🥇</div>
+        <div class="table-card-name">GOLD</div>
+        <div class="table-card-desc">Mise min. 100€ · Illimité</div>
+      </div>
+    </div>
+    <button class="bet-btn" onclick="closeTableSelect()" style="margin-top:1rem">Fermer</button>
+  </div>
+</div>
+
+<!-- ── STATS MODAL ── -->
+<div class="modal-overlay" id="stats-modal">
+  <div class="modal stats-modal">
+    <div class="modal-title">📊 STATISTIQUES</div>
+    <div class="stats-grid" id="stats-grid"></div>
+    <canvas id="stats-chart" height="100" style="width:100%;margin-top:1rem"></canvas>
+    <button class="bet-btn" onclick="closeStats()" style="margin-top:1rem;width:100%">Fermer</button>
+  </div>
+</div>
+
+<!-- ── OBJECTIVES MODAL / TOAST ── -->
+<div class="objective-toast" id="obj-toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
