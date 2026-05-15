@@ -324,3 +324,141 @@ input:checked+.toggle-track::after{transform:translateX(16px);background:var(--g
 /* ══ SCROLLBAR ══════════════════════════════════════════════ */
 ::-webkit-scrollbar{width:5px}
 ::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:99px}
+
+/* ══ RESPONSIVE — MOBILE ════════════════════════════════════ */
+@media (max-width: 600px) {
+
+  /* Base */
+  body{padding-bottom:1.5rem}
+  .casino{padding:2rem .4rem 1.5rem;gap:.6rem}
+
+  /* ── Topbar : titre en haut, boutons en dessous ── */
+  .topbar{
+    flex-wrap:wrap;
+    padding:0 0 .25rem;
+    gap:.5rem;
+  }
+  /* Titre centré sur toute la largeur, en premier */
+  .casino-title-wrap{
+    order:-1;
+    width:100%;
+    justify-content:center;
+    gap:.6rem;
+    margin-bottom:.1rem;
+  }
+  .casino-title{font-size:clamp(26px,8vw,40px);letter-spacing:7px}
+  .ornament{font-size:14px}
+  /* Boutons gauche/droite en ligne sous le titre */
+  .topbar-left{order:0;flex:1;gap:.35rem}
+  .topbar-right{order:1;gap:.35rem}
+  .icon-btn{font-size:8px;padding:4px 8px;letter-spacing:.8px}
+  .table-level-badge{font-size:9px;padding:3px 6px}
+
+  /* Jackpot banner */
+  .jackpot-banner{padding:.35rem .75rem;gap:.4rem}
+  .jackpot-label{font-size:8px;letter-spacing:1px}
+  .jackpot-value{font-size:17px;min-width:60px}
+  .jackpot-btn{font-size:8px;padding:3px 7px}
+
+  /* Bank row */
+  .bank-row{gap:.5rem;padding:.45rem .75rem;flex-wrap:nowrap}
+  .bank-value{font-size:15px}
+  .bank-label{font-size:7px;letter-spacing:1.5px}
+  .bank-sep{font-size:12px}
+
+  /* Table — hauteur réduite, coins moins arrondis */
+  .table{
+    border-radius:40px 40px 30px 30px;
+    padding:.75rem .75rem 1.25rem;
+    min-height:0;
+    gap:.3rem;
+  }
+  .table::before{border-radius:37px 37px 27px 27px;inset:4px}
+
+  /* Scores & labels */
+  .score-display{font-size:20px;min-height:26px}
+  .zone-label{font-size:8px;letter-spacing:2px}
+  .dealer-think{font-size:16px;min-height:20px}
+
+  /* Cartes plus petites */
+  .card{width:54px;height:76px;border-radius:5px;padding:3px}
+  .card:not(:first-child){margin-left:-16px}
+  .card-rank{font-size:13px}
+  .card-suit{font-size:9px}
+  .card-center{font-size:18px}
+  .hand{min-height:76px}
+
+  /* Player zone */
+  .player-zone{min-width:100px;max-width:unset}
+  .player-zones-wrap{gap:.5rem}
+  .zone-bet{font-size:10px}
+
+  /* Result banner */
+  .result-banner{font-size:clamp(15px,5vw,24px);letter-spacing:3px;min-height:30px}
+
+  /* Special action buttons */
+  .special-btn{padding:.4rem .75rem;font-size:10px;letter-spacing:1px}
+
+  /* Strategy hint */
+  .strategy-hint{padding:.35rem .75rem;font-size:10px;letter-spacing:1px}
+
+  /* Bankroll chart */
+  .bankroll-chart-wrap{padding:.4rem .5rem .3rem}
+
+  /* Betting panel */
+  .betting-panel{gap:.45rem}
+  .betting-header{gap:.3rem}
+  .betting-title{font-size:9px;letter-spacing:2px}
+  .multi-btn{padding:3px 9px;font-size:11px}
+
+  /* Chips */
+  .chips-row{gap:.35rem}
+  .chip{width:48px;height:48px;font-size:11px;border-width:2px}
+  .chip::before{inset:4px}
+
+  /* Bet actions */
+  .bet-actions{gap:.4rem;flex-wrap:wrap;justify-content:center}
+  .bet-btn{padding:.4rem .9rem;font-size:9px;letter-spacing:1.2px}
+
+  /* Action panel — grille 3×2 sur petit écran */
+  .action-panel{gap:.35rem}
+  .action-btn{
+    padding:.5rem 0;
+    font-size:10px;
+    letter-spacing:1.5px;
+    flex:1;
+    min-width:calc(33% - .35rem);
+    text-align:center;
+  }
+  .surrender-btn{font-size:9px;min-width:calc(50% - .35rem)}
+
+  /* Strategy toggles */
+  .strategy-toggle-row{gap:.6rem;flex-wrap:wrap}
+  .toggle-label{font-size:9px;letter-spacing:.8px}
+
+  /* History */
+  .history-strip{gap:3px}
+  .hdot{width:16px;height:16px;font-size:6px}
+  .streak-display{font-size:10px}
+
+  /* Rules */
+  .rules-row{font-size:8px;letter-spacing:.5px;gap:.3rem}
+
+  /* Modals */
+  .modal{padding:1.1rem .85rem;width:min(400px,94vw)}
+  .modal-title{font-size:19px;letter-spacing:3px;margin-bottom:.75rem}
+  .table-cards{gap:.5rem}
+  .table-card{padding:.65rem .4rem;min-width:80px}
+  .table-card-icon{font-size:20px}
+  .table-card-name{font-size:10px}
+  .table-card-desc{font-size:9px}
+  .stats-grid{grid-template-columns:1fr 1fr;gap:.4rem}
+  .stat-val{font-size:18px}
+  .stat-label{font-size:7px}
+
+  /* Toast */
+  .objective-toast{
+    font-size:10px;letter-spacing:1px;padding:.55rem .9rem;
+    white-space:normal;text-align:center;width:88vw;
+  }
+}
